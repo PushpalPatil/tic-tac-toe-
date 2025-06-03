@@ -1,28 +1,82 @@
 
-export type Board = PlayerCell[][]
+export type Board =  [cell, cell, cell, cell, cell, cell, cell, cell, cell]
 export type Player = 'x' |'o'
-export type Endstate = Player | 'Tie' | undefined
-export type PlayerCell = Player | null
-export type PlayerPosition = {
-    row: number, 
-    col: number
-}
+export type EndState = 'x' |'o' | 'Tie' | undefined
+export type cell = Player | null
+
+export type indexes =  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 export type Game = {
     board: Board,
-    currentPlayer: 'x'
+    currentPlayer: Player,
+    endState?: EndState
 }
 
+const xWon = (game:Game) => playerWins(game, 'x')
 
-export const gameState = (): Game =>{
-    const game: Game = {
-        board: [
-            [null, null, null],
-            [null, null, null],
-            [null, null, null]
-        ],
-        currentPlayer: 'x'
+const oWon = (game:Game) => playerWins(game, 'o')
+
+
+export const initializeGame = (): Game =>{
+    
+    return{
+        board: [null, null, null, null, null, null, null, null, null],
+        currentPlayer: 'x',
+
     }
-    return game
 }
 
+// define all wins
+const wins: indexes[][] = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [2,4,6],
+    [0,4,8]
+]
+
+function playerWins(game:Game, player:Player):boolean{
+    
+    for(let i = 0; i<wins.length; i++){
+        const winState = wins[i];
+        let cellsInWinState = true;
+
+        for(let j = 0; j<winState.length; j++){
+            const indexOfCell = winState[j];
+
+            if(game.board[indexOfCell] != player){
+                cellsInWinState = false;
+                break;
+            }
+        }
+
+        if(cellsInWinState) return true;
+
+    }
+
+    return false;
+}
+
+function calculateEndState(game: Game) : EndState{
+    if(game.board.every((cell) => cell !== null)) return 'Tie'
+    if(xWon(game)) return 'x'
+    if(oWon(game)) return 'o'
+
+    return undefined
+}
+
+export function move(game: Game, position: indexes): Game{
+    if(game.board[position] != null){
+        return game
+    }
+
+    const next = structuredClone(game)
+    next.board[position] = game.currentPlayer
+    next.currentPlayer = next.currentPlayer === 'x' ? 'o' : 'x'
+    next.endState = calculateEndState(next)
+
+    return next
+}

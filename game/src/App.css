@@ -1,5 +1,23 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+html, body{
+  height: 100%;
+  margin:0;
+  padding:0;
+  color: rgb(1, 1, 40);
+}
+
+.app{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
 #root {
-  max-width: 1280px;
+  max-width: 2000px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -28,6 +46,7 @@
   font-weight: bold;
   cursor: pointer;
 }
+
 
 .cell:hover {
   background-color: rgba(0, 0, 0, 0.05);

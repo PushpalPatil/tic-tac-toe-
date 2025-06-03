@@ -14,6 +14,8 @@ function App() {
 
   return(
     <div className='gameboard'> 
+
+      <h1> Welcome to TicTacToe! </h1>
       <div className='row'>
         <div onClick={ () => clickCell(0)} className='cell'>{game.board[0]}</div>
         <div onClick={ () => clickCell(1)} className='cell'>{game.board[1]}</div>
@@ -30,6 +32,7 @@ function App() {
         <div onClick={() => clickCell(8)} className="cell">{game.board[8]}</div>
       </div>
       {game.endState && <div className='result'>{game.endState} wins!</div>}
+    
     
     </div> 
   )

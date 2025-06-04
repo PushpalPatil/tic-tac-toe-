@@ -1,22 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { TicTacToeClient } from './api'
 import './App.css'
-import { initializeGame, move, type indexes } from './game/game'
+import { type Game, type indexes } from './game/game'
 
 function App() {
-  
-  const [game, setGame] = useState(initializeGame())
+  const api = useMemo(() => new TicTacToeClient(), []) 
+
+  const [game, setGame] = useState<Game | undefined>()
+
+  async function initializeGame(){
+    const initialState = await api.createGame()
+    setGame(initialState)
+  }
+
+  useEffect(()=>{
+    initializeGame()
+  }, [])
+
+  async function clickCell(i : indexes){
+    const ga = await api.makeMove(game!.gameID, i)
+    setGame(ga)
+  }
+
+  if(!game){
+    return(
+      <div>Loading ... </div>
+    )
+  }
+
+  //const [game, setGame] = useState(initializeGame())
 
   // when cell is clicked on, return how the board was previously + the extra move. 
-  const clickCell = (i : indexes) => {
-    if(game.endState) return
-    setGame(prev => move(prev, i))
-  }
+  // const clickCell = (i : indexes) => {
+
+  //   if(game.endState) return
+  //   setGame(prev => move(prev, i))
+  // }
 
  
  
   const isTie = (): boolean => {
     return game.endState === 'Tie';
   };
+
+
   return(
     <>
     <div className='wrap'>
@@ -24,7 +51,7 @@ function App() {
     
     
       <div className='gameboard'> 
-
+        
         <div className='row'>
           <div onClick={ () => clickCell(0)} className='cell'>{game.board[0]}</div>
           <div onClick={ () => clickCell(1)} className='cell'>{game.board[1]}</div>

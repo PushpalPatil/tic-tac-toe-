@@ -28,16 +28,16 @@ export class TicTacToeMemory implements TicTacToeApi {
         // value = version
         this.gamesMap.set(version.gameID, version)
 
-        return version
+        return version;
     }
     async makeMove(gameID: string, index:number): Promise<Game> {
         // returns the new game after a move has been made. 
-        const game = await this.getGame(gameID)
+        const game =  await this.getGame(gameID)
 
         const newGame = move(game, index as indexes)
         this.gamesMap.set(gameID, newGame)
 
-        return newGame
+        return newGame;
     }
     async getGame(gameID: string): Promise<Game> {
         /*  Await can be put in front of an expression to wait for a promise to resolve 
@@ -45,7 +45,8 @@ export class TicTacToeMemory implements TicTacToeApi {
 
         If promise rejects, then an exception raised at the point of the await. */
 
-        const game = await this.getGame(gameID)
+        const game = this.gamesMap.get(gameID)
+        if(!game) throw new Error("Game not found")
         
         return game
     }

@@ -24,7 +24,7 @@ export const initializeGame = (): Game =>{
         gameID: crypto.randomUUID(),
         board: [null, null, null, null, null, null, null, null, null],
         currentPlayer: 'X',
-        
+        endState: undefined,
     }
 }
 

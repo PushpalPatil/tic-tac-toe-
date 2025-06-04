@@ -1,28 +1,30 @@
 
 export type Board =  [cell, cell, cell, cell, cell, cell, cell, cell, cell]
-export type Player = 'x' |'o'
-export type EndState = 'x' |'o' | 'Tie' | undefined
+export type Player = 'X' |'O'
+export type EndState = 'X' |'O' | 'Tie' | undefined
 export type cell = Player | null
 
 export type indexes =  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 export type Game = {
+    gameID: string,
     board: Board,
     currentPlayer: Player,
     endState?: EndState
 }
 
-const xWon = (game:Game) => playerWins(game, 'x')
+const xWon = (game:Game) => playerWins(game, 'X')
 
-const oWon = (game:Game) => playerWins(game, 'o')
+const oWon = (game:Game) => playerWins(game, 'O')
 
 
 export const initializeGame = (): Game =>{
     
     return{
+        gameID: crypto.randomUUID(),
         board: [null, null, null, null, null, null, null, null, null],
-        currentPlayer: 'x',
-
+        currentPlayer: 'X',
+        
     }
 }
 
@@ -62,8 +64,8 @@ function playerWins(game:Game, player:Player):boolean{
 
 function calculateEndState(game: Game) : EndState{
     if(game.board.every((cell) => cell !== null)) return 'Tie'
-    if(xWon(game)) return 'x'
-    if(oWon(game)) return 'o'
+    if(xWon(game)) return 'X'
+    if(oWon(game)) return 'O'
 
     return undefined
 }
@@ -75,7 +77,7 @@ export function move(game: Game, position: indexes): Game{
 
     const next = structuredClone(game)
     next.board[position] = game.currentPlayer
-    next.currentPlayer = next.currentPlayer === 'x' ? 'o' : 'x'
+    next.currentPlayer = next.currentPlayer === 'X' ? 'O' : 'X'
     next.endState = calculateEndState(next)
 
     return next

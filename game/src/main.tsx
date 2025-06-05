@@ -1,24 +1,34 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import {createBrowserRouter, BrowserRouter, RouterProvider} from "react-router";
-import { GameView } from './GameView.tsx';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from "react-router";
+import './index.css';
+import Layout from './Layout';
+import { GameView } from './routes/Game';
+import { GameLobby } from './routes/GameLobby';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: App,
+    Component: Layout,
     children: [
       {
-        path: "./game/game.tsx/:gameID",
-        Component: GameView,
+        path: "/",
+        Component: GameLobby,
+        loader: async () => {
+          // WHAT THE FUCK DOES THIS DO??? HOW DOES THE ROUTE GET THE DATA?????
+          const games = Array(9).fill(null).map((obj, idx) => `Game${idx}`)
+          return games
+        }
       },
       {
-        path: "/",
-        Component: GameLobby, 
-      }
+        path: "/easteregg",
+        Component: () => <div>Hello from the easter egg component</div>,
+      },
+      {
+        path: "/game/:gameID",
+        Component: GameView,
+      },
     ],
   }
 ]);
@@ -26,7 +36,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router = {router}/>
-
+    <RouterProvider router={router} />
   </StrictMode>,
 )

@@ -1,7 +1,7 @@
+import { Outlet } from 'react-router'
 import './App.css'
-import { GameView } from './GameView'
 
-function App() {
+function Layout() {
   
   //const [game, setGame] = useState(initializeGame())
 
@@ -16,13 +16,11 @@ function App() {
     <>
     <div className='wrap'>
       <h1 className='title'> Welcome to TicTacToe! </h1>
-    
-      <GameView/>
-
+      <Outlet />
     </div>
     </>
   )
 
 }
 
-export default App
+export default Layout

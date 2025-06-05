@@ -1,4 +1,4 @@
-import { type Game, type indexes, initializeGame, move } from './game/game.tsx'
+import { type Game, type indexes, initializeGame, move } from './game/game'
 
 export interface TicTacToeApi{
     // contract between client & server

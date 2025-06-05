@@ -1,11 +1,11 @@
 //e.g server.js
 import express from "express";
 import ViteExpress from "vite-express";
-import { TicTacToeMemory } from "./src/api";
+import { TicTacToeApiToDB } from './src/db/db';
 
 const app = express();
 app.use(express.json())
-const api = new TicTacToeMemory()
+const api = new TicTacToeApiToDB()
 
 app.get("/message", (_, res) => res.send("Hello from express!"));
 

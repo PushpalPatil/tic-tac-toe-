@@ -27,7 +27,7 @@ export class TicTacToeApiToDB implements TicTacToeApi{
         const newGame = move(game, index as indexes)
         const vals : typeof gamesTable.$inferInsert = newGame
 
-        await db.update(gamesTable).set(vals).where(eq(gamesTable.id, gameID))
+        await db.update(gamesTable).set(vals).where(eq(gamesTable.gameID, gameID))
 
         return newGame
     }

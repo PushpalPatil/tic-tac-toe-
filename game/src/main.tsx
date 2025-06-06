@@ -45,7 +45,6 @@ const router = createBrowserRouter([
           // looks like { game: { ... a Game object here... }}
         }
       },
-    
 
     ],
   }

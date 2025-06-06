@@ -75,6 +75,7 @@ export class TicTacToeClient implements TicTacToeApi {
         const games = await response.json()
         return games
     }
+    
     async makeMove(gameID: string, index: number): Promise<Game> {
         const response = await fetch(`${BASE_URL}/api/game/${gameID}/move`,
             {

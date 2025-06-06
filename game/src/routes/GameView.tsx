@@ -4,6 +4,8 @@ import { TicTacToeClient } from '../api'
 import '../App.css'
 import { type Game, type indexes } from '../game/game'
 import io from 'socket.io-client';
+import { NewGame } from './NewGame'
+
 
 export function GameView() {
   // const gameID = useLoaderData<string>()
@@ -93,7 +95,9 @@ export function GameView() {
           {isTie() ? 'Tie!' : `${game.endState} Wins!`}
         </div>
       }
-
+    <div className='newClass'>
+      <button className='newGame' onClick={() => NewGame}>New Game</button>
+    </div>
     </div>
   )
 }

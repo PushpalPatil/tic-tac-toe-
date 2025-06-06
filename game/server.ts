@@ -1,8 +1,6 @@
 import cors from "cors";
 import express from "express";
-import { createServer } from "http";
 import { Server } from "socket.io";
-import ViteExpress from "vite-express";
 import { TicTacToeApiToDB } from './src/db/db';
 
 const app = express();
@@ -13,13 +11,7 @@ app.use(cors({
 }));
 
 // Fix: Create HTTP server properly
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-    cors: {
-        origin: "http://localhost:5173",
-        methods: ["GET", "POST"]
-    }
-});
+//const httpServer = createServer(app);
 
 const api = new TicTacToeApiToDB()
 
@@ -33,6 +25,20 @@ app.post("/api/game/", async (req, res) => {
     const game = await api.createGame()
     res.json(game)
 })
+
+
+
+
+// Use httpServer instead of app
+const server = app.listen( 3000, () => console.log("Server is listening..."));
+
+
+const io = new Server(server , {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"]
+    }
+});
 
 // Socket.io event handlers
 io.on('connection', (socket) => {
@@ -58,6 +64,3 @@ io.on('connection', (socket) => {
         console.log('User disconnected:', socket.id);
     });
 });
-
-// Use httpServer instead of app
-ViteExpress.listen(httpServer, 3000, () => console.log("Server is listening..."));

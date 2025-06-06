@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router";
 import './index.css';
 import Layout from './Layout';
-import { GameView } from './routes/GameView';
 import { GameLobby } from './routes/GameLobby';
-
+import { GameView } from './routes/GameView';
+import { NewGame } from './routes/NewGame';
 
 const router = createBrowserRouter([
   {
@@ -29,7 +29,11 @@ const router = createBrowserRouter([
         path: "/game/:gameID",
         Component: GameView,
       },
-      
+      {
+        path: "/game/:newGame",
+        Component: NewGame,
+      }
+
     ],
   }
 ]);

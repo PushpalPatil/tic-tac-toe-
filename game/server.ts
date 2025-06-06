@@ -25,7 +25,10 @@ app.post("/api/game/", async (req, res) => {
     const game = await api.createGame()
     res.json(game)
 })
-
+app.post("/api/game/:gameID/move", async(req, res) =>{
+    const game = await api.makeMove(req.params.gameID, req.body.index)
+    res.json(game)
+})
 
 
 

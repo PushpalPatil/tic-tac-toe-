@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useLoaderData, useParams } from 'react-router'
+import { useLoaderData, useNavigate, useParams } from 'react-router'
+import io from 'socket.io-client'
 import { TicTacToeClient } from '../api'
 import '../App.css'
 import { type Game, type indexes } from '../game/game'
-import io from 'socket.io-client';
-import { NewGame } from './NewGame'
 
 
 export function GameView() {
@@ -12,11 +11,14 @@ export function GameView() {
 
   const params = useParams()
   const gameID = params.gameID
+  const nav = useNavigate()
 
   const api = useMemo(() => new TicTacToeClient(), [])
   const loadedGameData = useLoaderData<{ game: Game }>()
   console.log("loaded game data: ", loadedGameData)
+
   const [game, setGame] = useState<Game>(loadedGameData.game)
+  console.log("offical game state:", game)
   //const [game, setGame] = useState<Game | undefined>()
 
   async function clickCell(i: indexes) {
@@ -34,7 +36,7 @@ export function GameView() {
   // }
 
   useEffect(() => {
-
+    setGame(loadedGameData.game)
     const socket = io("http://localhost:3000")
     socket.on("connect", () => {
       console.log("connected to socket");
@@ -69,6 +71,11 @@ export function GameView() {
     return game.endState === 'Tie';
   };
 
+  async function newGame() {
+    const createdGame = await api.createGame()
+    nav("/game/" + createdGame.gameID)
+  }
+
   return (
 
     <div className='gameboard'>
@@ -95,9 +102,9 @@ export function GameView() {
           {isTie() ? 'Tie!' : `${game.endState} Wins!`}
         </div>
       }
-    <div className='newClass'>
-      <button className='newGame' onClick={() => NewGame}>New Game</button>
-    </div>
+      <div className='newClass'>
+        <button className='newGame' onClick={() => newGame()}>New Game</button>
+      </div>
     </div>
   )
 }

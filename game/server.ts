@@ -15,7 +15,6 @@ app.use(cors({
 //const httpServer = createServer(app);
 
 const api = new TicTacToeApiToDB()
-const gamesApi = new TicTacToeClient()
 // Your existing REST endpoints
 app.get("/api/game/:gameID", async (req, res) => {
     const game = await api.getGame(req.params.gameID)
@@ -33,7 +32,7 @@ app.post("/api/game/:gameID/move", async(req, res) =>{
 
 // GAME LOBBY
 app.get("/api/games", async(req,res) =>{
-    const games = await gamesApi.getGames()
+    const games = await api.getGames()
     res.json(games)
 })
 

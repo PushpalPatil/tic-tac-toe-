@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { redirect, useLoaderData, useParams } from 'react-router'
+import { useLoaderData, useParams } from 'react-router'
 import { TicTacToeClient } from '../api'
 import '../App.css'
 import { type Game, type indexes } from '../game/game'
+import io from 'socket.io-client';
 
 export function GameView() {
   // const gameID = useLoaderData<string>()
@@ -11,8 +12,9 @@ export function GameView() {
   const gameID = params.gameID
 
   const api = useMemo(() => new TicTacToeClient(), [])
-  const { game: initialGame } = useLoaderData<{ game: Game }>()
-  const [game, setGame] = useState<Game>(initialGame)
+  const loadedGameData = useLoaderData<{ game: Game }>()
+  console.log("loaded game data: ", loadedGameData)
+  const [game, setGame] = useState<Game>(loadedGameData.game)
   //const [game, setGame] = useState<Game | undefined>()
 
   async function clickCell(i: indexes) {

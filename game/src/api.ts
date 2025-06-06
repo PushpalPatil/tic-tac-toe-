@@ -69,7 +69,7 @@ export class TicTacToeClient implements TicTacToeApi {
         const game = await response.json()
         return game
     }
-
+//GAME LOBBY
     async getGames(): Promise<Game[]> {
         const response = await fetch(`${BASE_URL}/api/games`)
         const games = await response.json()

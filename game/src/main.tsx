@@ -21,8 +21,10 @@ const router = createBrowserRouter([
         Component: GameLobby,
         loader: async () => {
           // WHAT THE FUCK DOES THIS DO??? HOW DOES THE ROUTE GET THE DATA?????
-          const games = Array(9).fill(null).map((obj, idx) => `Game${idx}`)
-          return games
+          const gamesArray = await api.getGames()
+          console.log("Games Received")
+          //const games =   Array(9).fill(null).map((obj, idx) => `Game${idx}`)
+          return gamesArray
         }
       },
       {
@@ -43,10 +45,7 @@ const router = createBrowserRouter([
           // looks like { game: { ... a Game object here... }}
         }
       },
-      {
-        path: "/game/:newGame",
-        Component: NewGame,
-      }
+    
 
     ],
   }

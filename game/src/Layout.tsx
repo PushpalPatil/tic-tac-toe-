@@ -16,6 +16,7 @@ function Layout() {
     <>
     <div className='wrap'>
       <h1 className='title'> Welcome to TicTacToe! </h1>
+      
       <Outlet />
     </div>
     </>

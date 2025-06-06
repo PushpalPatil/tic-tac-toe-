@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import { Server } from "socket.io";
 import { TicTacToeApiToDB } from './src/db/db';
+import { TicTacToeClient } from "./src/api";
 
 const app = express();
 app.use(express.json())
@@ -14,7 +15,7 @@ app.use(cors({
 //const httpServer = createServer(app);
 
 const api = new TicTacToeApiToDB()
-
+const gamesApi = new TicTacToeClient()
 // Your existing REST endpoints
 app.get("/api/game/:gameID", async (req, res) => {
     const game = await api.getGame(req.params.gameID)
@@ -30,7 +31,11 @@ app.post("/api/game/:gameID/move", async(req, res) =>{
     res.json(game)
 })
 
-
+// GAME LOBBY
+app.get("/api/games", async(req,res) =>{
+    const games = await gamesApi.getGames()
+    res.json(games)
+})
 
 // Use httpServer instead of app
 const server = app.listen( 3000, () => console.log("Server is listening..."));

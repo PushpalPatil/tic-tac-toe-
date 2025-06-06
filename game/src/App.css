@@ -1,31 +1,57 @@
 .gameboard {
-  
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 500px;
 }
 
 .wrap{
   display: flex;
+  padding: 10%;
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+  min-height: auto;
 
 }
+.Lobby{
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+.GameList{
+  display: flex;
+  padding: 10%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: auto;
+  box-shadow: #0d0c0c;
+}
 .title{
+  padding-bottom: 10%;
   text-align: center;
   color: #fff;
+  font-family: 'Courier New', Courier, monospace;
 }
 .row {
   display: flex;
   justify-content: center;
 }
 
+.newClass{
+  display: flex;
+  padding: 15%;
+  justify-content: center;
+}
+.newGame{
+  display: flex;
+  flex-direction: column;
+
+}
 .result{
   font-family: 'Courier New', Courier, monospace;
   font-weight: 1000;
-  font-size: larger;
+  font-size:x-large;
   padding-top: 15%;
   display: flex;
   justify-content: center;

@@ -1,10 +1,10 @@
 import { type Game, type indexes, initializeGame, move } from './game/game'
 
-export interface TicTacToeApi{
+export interface TicTacToeApi {
     // contract between client & server
-    createGame() : Promise<Game>
-    makeMove(gameID: string, index : number): Promise<Game>
-    getGame(gameID: string) : Promise<Game>
+    createGame(): Promise<Game>
+    makeMove(gameID: string, index: number): Promise<Game>
+    getGame(gameID: string): Promise<Game>
 }
 
 export class TicTacToeMemory implements TicTacToeApi {
@@ -30,9 +30,9 @@ export class TicTacToeMemory implements TicTacToeApi {
 
         return version;
     }
-    async makeMove(gameID: string, index:number): Promise<Game> {
+    async makeMove(gameID: string, index: number): Promise<Game> {
         // returns the new game after a move has been made. 
-        const game =  await this.getGame(gameID)
+        const game = await this.getGame(gameID)
 
         const newGame = move(game, index as indexes)
         this.gamesMap.set(gameID, newGame)
@@ -46,19 +46,20 @@ export class TicTacToeMemory implements TicTacToeApi {
         If promise rejects, then an exception raised at the point of the await. */
 
         const game = this.gamesMap.get(gameID)
-        if(!game) throw new Error("Game not found")
-        
+        if (!game) throw new Error("Game not found")
+
         return game
     }
 
 }
 
 
+const BASE_URL = "http://localhost:3000"
 
-export class TicTacToeClient implements TicTacToeApi{
+export class TicTacToeClient implements TicTacToeApi {
     async createGame(): Promise<Game> {
-        
-        const response = await fetch("/api/game/", {
+
+        const response = await fetch(`${BASE_URL}/api/game/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -68,14 +69,20 @@ export class TicTacToeClient implements TicTacToeApi{
         const game = await response.json()
         return game
     }
+
+    async getGames(): Promise<Game[]> {
+        const response = await fetch(`${BASE_URL}/api/games`)
+        const games = await response.json()
+        return games
+    }
     async makeMove(gameID: string, index: number): Promise<Game> {
-        const  response = await fetch(`/api/game/${gameID}/move`,
+        const response = await fetch(`${BASE_URL}/api/game/${gameID}/move`,
             {
                 method: "POST",
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify({index})
+                body: JSON.stringify({ index })
             }
         )
 
@@ -84,7 +91,7 @@ export class TicTacToeClient implements TicTacToeApi{
     }
     async getGame(gameID: string): Promise<Game> {
 
-        const response = await fetch(`/api/game/${gameID}`)
+        const response = await fetch(`${BASE_URL}/api/game/${gameID}`)
         const game = await response.json()
         return game
     }

@@ -4,6 +4,7 @@ import io from 'socket.io-client'
 import { TicTacToeClient } from '../api'
 import '../App.css'
 import { type Game, type indexes } from '../game/game'
+import { SERVER_URL } from '../utils/constants'
 
 
 export function GameView() {
@@ -36,9 +37,9 @@ export function GameView() {
   useEffect(() => {
 
     setGame(loadedGameData.game)
-    const socket = io("http://localhost:3000")
+  const socket = io(SERVER_URL)
 
-    if(!socket || !gameID) return;
+    if (!socket || !gameID) return;
 
     socket.on("connect", () => {
 

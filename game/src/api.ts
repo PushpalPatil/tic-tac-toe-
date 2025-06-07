@@ -1,12 +1,13 @@
 import { type Game, type indexes, initializeGame, move } from './game/game'
+import { SERVER_URL } from './utils/constants'
 
 export interface TicTacToeApi {
     // contract between client & server
     createGame(): Promise<Game>
     makeMove(gameID: string, index: number): Promise<Game>
     getGame(gameID: string): Promise<Game>
-    getGames(): Promise<Game[]> 
-    
+    getGames(): Promise<Game[]>
+
 }
 
 export class TicTacToeMemory implements TicTacToeApi {
@@ -49,14 +50,14 @@ export class TicTacToeMemory implements TicTacToeApi {
 
         return game
     }
-    async getGames(): Promise<Game[]>{
+    async getGames(): Promise<Game[]> {
         return Array.from(this.gamesMap.values())
     }
 
 }
 
 
-const BASE_URL = "http://localhost:3000"
+const BASE_URL = SERVER_URL
 
 export class TicTacToeClient implements TicTacToeApi {
     async createGame(): Promise<Game> {
@@ -71,13 +72,13 @@ export class TicTacToeClient implements TicTacToeApi {
         const game = await response.json()
         return game
     }
-//GAME LOBBY
+    //GAME LOBBY
     async getGames(): Promise<Game[]> {
         const response = await fetch(`${BASE_URL}/api/games`)
         const games = await response.json()
         return games
     }
-    
+
     async makeMove(gameID: string, index: number): Promise<Game> {
         const response = await fetch(`${BASE_URL}/api/game/${gameID}/move`,
             {

@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "bun run --watch server.ts",
     "server": "bun server.ts",
-    "start": "bun vite",
     "build": "tsc -b && vite build",
+    "start": "bun vite",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker:build" : "docker build -t -tictactoe-server .",
+    "docker:run" : "docker run -t -tictactoe-server ."
   },
   "dependencies": {
     "@types/socket.io": "^3.0.1",

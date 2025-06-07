@@ -5,6 +5,8 @@ export interface TicTacToeApi {
     createGame(): Promise<Game>
     makeMove(gameID: string, index: number): Promise<Game>
     getGame(gameID: string): Promise<Game>
+    getGames(): Promise<Game[]> 
+    
 }
 
 export class TicTacToeMemory implements TicTacToeApi {
@@ -27,16 +29,13 @@ export class TicTacToeMemory implements TicTacToeApi {
         // key = version.gameID
         // value = version
         this.gamesMap.set(version.gameID, version)
-
         return version;
     }
     async makeMove(gameID: string, index: number): Promise<Game> {
         // returns the new game after a move has been made. 
         const game = await this.getGame(gameID)
-
         const newGame = move(game, index as indexes)
         this.gamesMap.set(gameID, newGame)
-
         return newGame;
     }
     async getGame(gameID: string): Promise<Game> {
@@ -49,6 +48,9 @@ export class TicTacToeMemory implements TicTacToeApi {
         if (!game) throw new Error("Game not found")
 
         return game
+    }
+    async getGames(): Promise<Game[]>{
+        return Array.from(this.gamesMap.values())
     }
 
 }

@@ -22,12 +22,10 @@ export function GameView() {
   //const [game, setGame] = useState<Game | undefined>()
 
   async function clickCell(i: indexes) {
-    const ga = await api.makeMove(game!.gameID, i)
+    const ga = await api.makeMove(game.gameID, i)
     setGame(ga)
   }
   // get pre-loaded data by router loader function - destructuring it and renaming it to initialGame
-
-
 
   // instead of initializing a game, i need to GET the :gameID game from the database
   // async function getGame(gameId: string) {
@@ -36,17 +34,27 @@ export function GameView() {
   // }
 
   useEffect(() => {
+
     setGame(loadedGameData.game)
     const socket = io("http://localhost:3000")
+
+    if(!socket || !gameID) return;
+
     socket.on("connect", () => {
+
       console.log("connected to socket");
       socket.emit("join-game", gameID);
+
       socket.on("user-joined", (userID: string) => {
         console.log(`user ${userID} joined`)
       });
-      socket.on("game-updated", (game: string) => {
+
+      socket.on("game-updated", (game: Game) => {
+        setGame(game);
         console.log("game updated", game)
-      })
+      });
+
+
     });
 
     return () => {
@@ -58,8 +66,6 @@ export function GameView() {
     //   getGame(gameID)
     // }
   }, [gameID]);
-
-
 
   if (!game) {
     return (

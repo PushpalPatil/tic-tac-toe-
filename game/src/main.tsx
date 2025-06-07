@@ -6,9 +6,6 @@ import './index.css';
 import Layout from './Layout';
 import { GameLobby } from './routes/GameLobby';
 import { GameView } from './routes/GameView';
-import { NewGame } from './routes/NewGame';
-
-
 
 const api = new TicTacToeClient()
 const router = createBrowserRouter([

@@ -2,7 +2,8 @@ import cors from "cors";
 import express from "express";
 import { Server } from "socket.io";
 import { TicTacToeApiToDB } from './src/db/db';
-import { TicTacToeClient } from "./src/api";
+import { Game } from "./src/game/game";
+
 
 const app = express();
 app.use(express.json())
@@ -10,6 +11,10 @@ app.use(cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
 }));
+
+const server = app.listen( 3000, () => console.log("Server is listening..."));
+const makeRoomID = (gameRoom : Game) => `${gameRoom.gameID}`;
+
 
 // Fix: Create HTTP server properly
 //const httpServer = createServer(app);
@@ -27,6 +32,7 @@ app.post("/api/game/", async (req, res) => {
 })
 app.post("/api/game/:gameID/move", async(req, res) =>{
     const game = await api.makeMove(req.params.gameID, req.body.index)
+    io.to(makeRoomID(game)).emit("game-updated", game)
     res.json(game)
 })
 
@@ -35,9 +41,6 @@ app.get("/api/games", async(req,res) =>{
     const games = await api.getGames()
     res.json(games)
 })
-
-// Use httpServer instead of app
-const server = app.listen( 3000, () => console.log("Server is listening..."));
 
 
 const io = new Server(server , {
@@ -51,21 +54,20 @@ const io = new Server(server , {
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    socket.on('join-game', (gameID) => {
-        socket.join(gameID);
-        console.log(`User ${socket.id} joined game ${gameID}`);
-    });
-
-    socket.on('make-move', async (data) => {
-        const { gameID, index } = data;
-        try {
-            const updatedGame = await api.makeMove(gameID, index);
-            // Broadcast to all players in the game room
-            io.to(gameID).emit('game-updated', updatedGame);
-        } catch (error) {
-            socket.emit('error', error.message);
+    socket.on('join-game', async (gameID:string) => {
+        const joined = await api.getGame(gameID);
+        if(!joined){
+            console.error(`Couldn't join game: ${gameID}`);
+            return;
         }
-    });
+            
+        
+        const roomID= makeRoomID(joined)
+        socket.join(roomID);
+        console.log(`User ${socket.id} joined game ${gameID}`);
+        io.to(roomID).emit("user-joined", socket.id)
+        
+    })
 
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);

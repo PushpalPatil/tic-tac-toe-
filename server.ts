@@ -1,7 +1,7 @@
 import cors from "cors";
 import express from "express";
 import { Server } from "socket.io";
-import { TicTacToeApiToDB } from './src/db/db';
+import { TicTacToeMemory } from './src/api';
 import { Game } from "./src/game/game";
 
 
@@ -16,7 +16,7 @@ const makeRoomID = (gameRoom: Game) => `${gameRoom.gameID}`;
 // Fix: Create HTTP server properly
 //const httpServer = createServer(app);
 
-const api = new TicTacToeApiToDB()
+const api = new TicTacToeMemory()
 // Your existing REST endpoints
 app.get("/api/game/:gameID", async (req, res) => {
     const game = await api.getGame(req.params.gameID)

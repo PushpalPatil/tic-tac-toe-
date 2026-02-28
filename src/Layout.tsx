@@ -2,26 +2,17 @@ import { Outlet } from 'react-router'
 import './App.css'
 
 function Layout() {
-  
-  //const [game, setGame] = useState(initializeGame())
-
-  // when cell is clicked on, return how the board was previously + the extra move. 
-  // const clickCell = (i : indexes) => {
-
-  //   if(game.endState) return
-  //   setGame(prev => move(prev, i))
-  // }
-
   return(
-    <>
-    <div className='wrap'>
-      <h1 className='title'> Welcome to TicTacToe! </h1>
-      
+    <div className='min-h-screen bg-cream flex flex-col items-center justify-center p-8'>
+      <h1 className='text-5xl font-extrabold mb-8 text-center tracking-tight'>
+        <span className='text-matcha-dark'>Tic</span>
+        <span className='text-strawberry'>Tac</span>
+        <span className='text-matcha-dark'>Toe</span>
+      </h1>
+
       <Outlet />
     </div>
-    </>
   )
-
 }
 
 export default Layout

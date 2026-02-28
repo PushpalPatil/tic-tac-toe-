@@ -1,80 +1,219 @@
-.gameboard {
-  display: flex;
-  flex-direction: column;
-  width: 500px;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Board wrapper */
+.board-perspective {
+  perspective: 800px;
 }
 
-.wrap{
-  display: flex;
-  padding: 10%;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  min-height: auto;
-
-}
-.Lobby{
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-}
-.GameList{
-  display: flex;
-  padding: 10%;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  min-height: auto;
-  box-shadow: #0d0c0c;
-}
-.title{
-  padding-bottom: 10%;
-  text-align: center;
-  color: #fff;
-  font-family: 'Courier New', Courier, monospace;
-}
-.row {
-  display: flex;
-  justify-content: center;
+.board-inner {
+  transform-style: preserve-3d;
 }
 
-.newClass{
-  display: flex;
-  padding: 15%;
-  justify-content: center;
-}
-.newGame{
-  display: flex;
-  flex-direction: column;
-
-}
-.result{
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: 1000;
-  font-size:x-large;
-  padding-top: 15%;
-  display: flex;
-  justify-content: center;
+/* Keycap press animation — accounts for 3D depth */
+@keyframes keypress {
+  0%   { transform: translateY(0) translateZ(0); }
+  40%  { transform: translateY(4px) translateZ(-6px); }
+  70%  { transform: translateY(-2px) translateZ(1px); }
+  100% { transform: translateY(0) translateZ(0); }
 }
 
-.cell {
-  width: 100px;
-  height: 100px;
-  border: 1px solid #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 48px;
-  font-weight: bold;
+/* Base keycap style — chunky 3D mechanical key */
+.keycap {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f3ec 100%);
+  border-radius: 12px;
+  box-shadow:
+    /* bottom face — thick for 3D depth */
+    0 6px 0 0 #8a9e78,
+    0 7px 0 0 #7a8e68,
+    /* soft ambient shadow */
+    0 10px 20px rgba(0, 0, 0, 0.12),
+    /* left edge highlight */
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    /* right/bottom inner shadow for curvature */
+    inset -2px -2px 4px rgba(138, 158, 120, 0.15);
+  border: 1px solid #c8d5b9;
+  transition: all 0.15s ease;
   cursor: pointer;
-  
+  user-select: none;
+  transform-style: preserve-3d;
 }
 
-.cell:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+.keycap:hover {
+  background: linear-gradient(145deg, #ffffff 0%, #edf2e8 100%);
+  transform: translateY(-1px);
+  box-shadow:
+    0 7px 0 0 #8a9e78,
+    0 8px 0 0 #7a8e68,
+    0 12px 24px rgba(0, 0, 0, 0.16),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(138, 158, 120, 0.15);
 }
 
-body{
-  margin: 0;
-  background: #09092a;
+.keycap:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 #8a9e78,
+    0 3px 0 0 #7a8e68,
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 4px rgba(138, 158, 120, 0.2);
+}
+
+/* Triggered on click via JS */
+.keycap-pressed {
+  animation: keypress 200ms ease-out;
+}
+
+/* Already has a mark on it — pressed down look */
+.keycap-played {
+  cursor: default;
+  background: linear-gradient(145deg, #f7f9f4 0%, #edf0e8 100%);
+  transform: translateY(3px);
+  box-shadow:
+    0 3px 0 0 #8a9e78,
+    0 4px 0 0 #7a8e68,
+    0 5px 10px rgba(0, 0, 0, 0.08),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 6px rgba(138, 158, 120, 0.2);
+}
+
+.keycap-played:hover {
+  transform: translateY(3px);
+  background: linear-gradient(145deg, #f7f9f4 0%, #edf0e8 100%);
+  box-shadow:
+    0 3px 0 0 #8a9e78,
+    0 4px 0 0 #7a8e68,
+    0 5px 10px rgba(0, 0, 0, 0.08),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 6px rgba(138, 158, 120, 0.2);
+}
+
+/* Mark color accents */
+.keycap-x {
+  color: #f2a7b0;
+  text-shadow: 0 2px 4px rgba(242, 167, 176, 0.4);
+}
+
+.keycap-o {
+  color: #8fb573;
+  text-shadow: 0 2px 4px rgba(143, 181, 115, 0.4);
+}
+
+/* Player selection keys — chunky 3D */
+.player-key {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f3ec 100%);
+  border-radius: 14px;
+  box-shadow:
+    0 6px 0 0 #8a9e78,
+    0 7px 0 0 #7a8e68,
+    0 10px 20px rgba(0, 0, 0, 0.12),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(138, 158, 120, 0.15);
+  border: 2px solid #c8d5b9;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.player-key:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 7px 0 0 #8a9e78,
+    0 8px 0 0 #7a8e68,
+    0 12px 24px rgba(0, 0, 0, 0.16),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(138, 158, 120, 0.15);
+}
+
+.player-key:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 #8a9e78,
+    0 3px 0 0 #7a8e68,
+    0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.player-key-selected-x {
+  background: linear-gradient(145deg, #f7b8c0 0%, #f2a7b0 100%);
+  color: #ffffff;
+  border-color: #e8929c;
+  box-shadow:
+    0 6px 0 0 #d4808a,
+    0 7px 0 0 #c47078,
+    0 10px 20px rgba(242, 167, 176, 0.3),
+    0 0 20px rgba(242, 167, 176, 0.3),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 4px rgba(200, 100, 110, 0.2);
+}
+
+.player-key-selected-o {
+  background: linear-gradient(145deg, #a0c485 0%, #8fb573 100%);
+  color: #ffffff;
+  border-color: #7aa35f;
+  box-shadow:
+    0 6px 0 0 #6b914f,
+    0 7px 0 0 #5b8140,
+    0 10px 20px rgba(143, 181, 115, 0.3),
+    0 0 20px rgba(143, 181, 115, 0.3),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 4px rgba(90, 130, 60, 0.2);
+}
+
+.player-key-dimmed {
+  opacity: 0.4;
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 #8a9e78,
+    0 3px 0 0 #7a8e68,
+    0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Turn glow effect */
+.player-key-active-turn {
+  animation: turnGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes turnGlow {
+  0%   { box-shadow: 0 6px 0 0 #8a9e78, 0 7px 0 0 #7a8e68, 0 10px 20px rgba(0,0,0,0.12), 0 0 10px rgba(181, 196, 161, 0.3); }
+  100% { box-shadow: 0 6px 0 0 #8a9e78, 0 7px 0 0 #7a8e68, 0 10px 20px rgba(0,0,0,0.12), 0 0 24px rgba(181, 196, 161, 0.6); }
+}
+
+/* New game spacebar key — chunky 3D */
+.spacebar-key {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f3ec 100%);
+  border-radius: 14px;
+  box-shadow:
+    0 6px 0 0 #8a9e78,
+    0 7px 0 0 #7a8e68,
+    0 10px 20px rgba(0, 0, 0, 0.12),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(138, 158, 120, 0.15);
+  border: 2px solid #c8d5b9;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.spacebar-key:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(145deg, #ffffff 0%, #edf2e8 100%);
+  box-shadow:
+    0 7px 0 0 #8a9e78,
+    0 8px 0 0 #7a8e68,
+    0 12px 24px rgba(0, 0, 0, 0.16),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(138, 158, 120, 0.15);
+}
+
+.spacebar-key:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 0 #8a9e78,
+    0 3px 0 0 #7a8e68,
+    0 4px 8px rgba(0, 0, 0, 0.1);
 }
